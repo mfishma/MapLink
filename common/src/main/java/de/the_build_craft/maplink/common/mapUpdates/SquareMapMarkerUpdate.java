@@ -48,7 +48,12 @@ public class SquareMapMarkerUpdate {
         public String fillColor;
         public String color;
         public float opacity = 0.5f;
+        public Float fillOpacity;
         public String icon = "";
+        public Int3 center;
+        public float radius;
+        public Int3 point1;
+        public Int3 point2;
     }
 
     public String name;

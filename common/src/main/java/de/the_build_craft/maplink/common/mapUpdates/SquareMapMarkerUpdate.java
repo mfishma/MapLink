@@ -41,6 +41,7 @@ public class SquareMapMarkerUpdate {
     public static class Marker{
         public Int3 point;
         public String tooltip = "";
+        public String popup;
         public String type;
         @JsonAdapter(PointsAdapterFactory.class)
         public Int3[][][] points = new Int3[0][][];

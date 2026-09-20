@@ -35,12 +35,12 @@ import java.util.List;
 
 /**
  * @author Leander Knüttel
- * @version 23.10.2025
+ * @version 20.09.2026
  */
 public class SquareMapMarkerUpdate {
     public static class Marker{
         public Int3 point;
-        public String tooltip;
+        public String tooltip = "";
         public String type;
         @JsonAdapter(PointsAdapterFactory.class)
         public Int3[][][] points = new Int3[0][][];

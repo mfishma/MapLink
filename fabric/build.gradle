@@ -19,12 +19,12 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 06.08.2026
+ * date: 20.09.2026
  */
 
 plugins {
-    id "net.fabricmc.fabric-loom" version "1.17.7" apply false
-    id "net.fabricmc.fabric-loom-remap" version "1.17.7" apply false
+    id "net.fabricmc.fabric-loom" version "1.17.9" apply false
+    id "net.fabricmc.fabric-loom-remap" version "1.17.9" apply false
 }
 
 if (rootProject.minecraft_version.startsWith("1")) {

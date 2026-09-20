@@ -18,12 +18,12 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * by: Leander Knüttel
- * date: 06.08.2026
+ * date: 20.09.2026
  */
 
 plugins {
-    id 'net.neoforged.moddev' version '2.0.143' apply false
-    id 'net.neoforged.moddev.legacyforge' version '2.0.143' apply false
+    id 'net.neoforged.moddev' version '2.0.147' apply false
+    id 'net.neoforged.moddev.legacyforge' version '2.0.147' apply false
 }
 
 if (mcVers.contains("1.20.1") && mcIndex <= mcVers.indexOf("1.20.1")) {

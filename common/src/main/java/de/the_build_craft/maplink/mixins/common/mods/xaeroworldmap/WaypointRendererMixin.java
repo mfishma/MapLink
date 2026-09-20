@@ -49,7 +49,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-#if MC_VER >= MC_26_1_0
+#if MC_VER >= MC_26_3_0
+import com.mojang.renderpearl.api.textures.GpuTextureView;
+#elif MC_VER >= MC_26_1_0
 import com.mojang.blaze3d.textures.GpuTextureView;
 #elif MC_VER >= MC_1_21_5
 import com.mojang.blaze3d.textures.GpuTexture;
@@ -66,7 +68,7 @@ import static de.the_build_craft.maplink.common.CommonModConfig.*;
 
 /**
  * @author Leander Knüttel
- * @version 06.08.2026
+ * @version 20.09.2026
  */
 @Pseudo
 @Mixin(WaypointRenderer.class)
@@ -345,7 +347,26 @@ public class WaypointRendererMixin {
         }
     }
 
-    #if MC_VER >= MC_26_1_0
+    #if MC_VER >= MC_26_3_0
+    @WrapOperation(method = "renderElement*", at = @At(value = "INVOKE", target = "Lxaero/map/graphics/MapRenderHelper;blitIntoMultiTextureRenderer(Lorg/joml/Matrix4f;Lxaero/map/graphics/renderer/multitexture/MultiTextureRenderTypeRenderer;FFIIIIFFFFIILcom/mojang/renderpearl/api/textures/GpuTextureView;)V"))
+    private static void customBlit(Matrix4f matrix,
+                                   MultiTextureRenderTypeRenderer renderer,
+                                   float x,
+                                   float y,
+                                   int u,
+                                   int v,
+                                   int width,
+                                   int height,
+                                   float r,
+                                   float g,
+                                   float b,
+                                   float a,
+                                   int textureWidth,
+                                   int textureHeight,
+                                   GpuTextureView texture,
+                                   Operation<Void> original,
+                                   Waypoint w) {
+    #elif MC_VER >= MC_26_1_0
     @WrapOperation(method = "renderElement*", at = @At(value = "INVOKE", target = "Lxaero/map/graphics/MapRenderHelper;blitIntoMultiTextureRenderer(Lorg/joml/Matrix4f;Lxaero/map/graphics/renderer/multitexture/MultiTextureRenderTypeRenderer;FFIIIIFFFFIILcom/mojang/blaze3d/textures/GpuTextureView;)V"))
     private static void customBlit(Matrix4f matrix,
                                    MultiTextureRenderTypeRenderer renderer,

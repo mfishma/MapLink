@@ -19,11 +19,11 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 06.08.2026
+ * date: 20.09.2026
  */
 
 plugins {
-    id 'net.neoforged.moddev' version '2.0.143'
+    id 'net.neoforged.moddev' version '2.0.147'
 }
 
 neoForge {

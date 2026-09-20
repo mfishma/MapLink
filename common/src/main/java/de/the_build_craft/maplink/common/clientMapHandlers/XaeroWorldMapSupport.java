@@ -20,7 +20,9 @@
 
 package de.the_build_craft.maplink.common.clientMapHandlers;
 
-#if MC_VER >= MC_1_21_5
+#if MC_VER >= MC_26_3_0
+import com.mojang.renderpearl.api.textures.GpuTexture;
+#elif MC_VER >= MC_1_21_5
 import com.mojang.blaze3d.textures.GpuTexture;
 #endif
 import de.the_build_craft.maplink.common.AbstractModInitializer;

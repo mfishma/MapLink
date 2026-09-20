@@ -44,7 +44,7 @@ import static de.the_build_craft.maplink.common.CommonModConfig.*;
 /**
  * @author Leander Knüttel
  * @author eatmyvenom
- * @version 06.08.2026
+ * @version 20.09.2026
  */
 public class Pl3xMapConnection extends MapConnection{
     private String markerLayerStringTemplate = "";
@@ -124,7 +124,7 @@ public class Pl3xMapConnection extends MapConnection{
             float updateDelay = 1;
             for (Pl3xMapPlayerUpdate.WorldSetting ws : update.worldSettings) {
                 Pl3xMapMarkerLayerConfig[] mls = HTTP.makeJSONHTTPRequest(URI.create(markerLayerStringTemplate
-                        .replace("{world}", ws.name.replaceAll(":", "-"))).toURL(), apiResponseType);
+                        .replace("{world}", escapeDimensionName(ws.name))).toURL(), apiResponseType);
                 for (Pl3xMapMarkerLayerConfig ml : mls) {
                     if (Objects.equals(ml.key, "pl3xmap_players")) {
                         updateDelay = Math.max(updateDelay, ml.updateInterval);
@@ -214,7 +214,7 @@ public class Pl3xMapConnection extends MapConnection{
         if (version == 0) {
             for (MarkerLayer layer : getMarkerLayers(false)){
                 Type apiResponseType = new TypeToken<Pl3xMapMarkerUpdate[]>() {}.getType();
-                URL reqUrl = URI.create(markerStringTemplate.replace("{world}", currentDimension.replaceAll(":", "-"))
+                URL reqUrl = URI.create(markerStringTemplate.replace("{world}", getCurrentDimensionEscaped())
                         .replace("{layerName}", layer.id)).toURL();
                 Pl3xMapMarkerUpdate[] markers = HTTP.makeJSONHTTPRequest(reqUrl, apiResponseType);
 
@@ -240,7 +240,7 @@ public class Pl3xMapConnection extends MapConnection{
             }
         } else if (version == 1) {
             Type apiResponseType = new TypeToken<SquareMapMarkerUpdate[]>() {}.getType();
-            URL reqUrl = URI.create(markerLayerStringTemplate.replace("{world}", currentDimension.replaceAll(":", "-"))).toURL();
+            URL reqUrl = URI.create(markerLayerStringTemplate.replace("{world}", getCurrentDimensionEscaped())).toURL();
             SquareMapMarkerUpdate[] markerLayers = HTTP.makeJSONHTTPRequest(reqUrl, apiResponseType);
 
             for (SquareMapMarkerUpdate layer : markerLayers){
@@ -288,7 +288,7 @@ public class Pl3xMapConnection extends MapConnection{
                     Set<MarkerLayer> layerSet = new HashSet<>();
                     for (Pl3xMapPlayerUpdate.WorldSetting ws : update.worldSettings) {
                         Pl3xMapMarkerLayerConfig[] mls = HTTP.makeJSONHTTPRequest(URI.create(markerLayerStringTemplate
-                                .replace("{world}", ws.name.replaceAll(":", "-"))).toURL(), apiResponseType);
+                                .replace("{world}", escapeDimensionName(ws.name))).toURL(), apiResponseType);
                         for (Pl3xMapMarkerLayerConfig ml : mls) {
                             if (!Objects.equals(ml.key, "pl3xmap_players")) {
                                 layerSet.add(new MarkerLayer(ml.key, ml.label));
@@ -298,7 +298,7 @@ public class Pl3xMapConnection extends MapConnection{
                     return layerSet;
                 }
 
-                URL reqUrl = URI.create(markerLayerStringTemplate.replace("{world}", currentDimension.replaceAll(":", "-"))).toURL();
+                URL reqUrl = URI.create(markerLayerStringTemplate.replace("{world}", getCurrentDimensionEscaped())).toURL();
                 Pl3xMapMarkerLayerConfig[] markerLayers = HTTP.makeJSONHTTPRequest(reqUrl, apiResponseType);
 
                 Set<MarkerLayer> layers = new HashSet<>();
@@ -318,7 +318,7 @@ public class Pl3xMapConnection extends MapConnection{
                     Pl3xMapConfiguration configuration = HTTP.makeJSONHTTPRequest(URI.create(onlineMapConfigLink).toURL(), Pl3xMapConfiguration.class);
                     Set<MarkerLayer> layerSet = new HashSet<>();
                     for (Pl3xMapConfiguration.World ws : configuration.worlds) {
-                        SquareMapMarkerUpdate[] mls = HTTP.makeJSONHTTPRequest(URI.create(markerLayerStringTemplate.replace("{world}", ws.name.replaceAll(":", "-"))).toURL(), apiResponseType);
+                        SquareMapMarkerUpdate[] mls = HTTP.makeJSONHTTPRequest(URI.create(markerLayerStringTemplate.replace("{world}", escapeDimensionName(ws.name))).toURL(), apiResponseType);
                         for (SquareMapMarkerUpdate ml : mls) {
                             if (!Objects.equals(ml.id, "pl3xmap_players")) {
                                 layerSet.add(new MarkerLayer(ml.id, ml.name));
@@ -328,7 +328,7 @@ public class Pl3xMapConnection extends MapConnection{
                     return layerSet;
                 }
 
-                URL reqUrl = URI.create(markerLayerStringTemplate.replace("{world}", currentDimension.replaceAll(":", "-"))).toURL();
+                URL reqUrl = URI.create(markerLayerStringTemplate.replace("{world}", getCurrentDimensionEscaped())).toURL();
                 SquareMapMarkerUpdate[] markerLayers = HTTP.makeJSONHTTPRequest(reqUrl, apiResponseType);
 
                 Set<MarkerLayer> layers = new HashSet<>();
@@ -355,5 +355,14 @@ public class Pl3xMapConnection extends MapConnection{
     @Override
     public boolean downloadTiles(String map, AreaSelection areaSelection) {
         return false;
+    }
+
+    @Override
+    protected String getCurrentDimensionEscaped() {
+        return escapeDimensionName(currentDimension);
+    }
+
+    private String escapeDimensionName(String name) {
+        return HTTP.escapeString(name.replace(":", "-"));
     }
 }

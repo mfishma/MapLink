@@ -45,7 +45,7 @@ import static de.the_build_craft.maplink.common.CommonModConfig.*;
 /**
  * @author Leander Knüttel
  * @author eatmyvenom
- * @version 06.08.2026
+ * @version 20.09.2026
  */
 public abstract class MapConnection {
     public final ModConfig.ServerEntry serverEntry;
@@ -203,4 +203,8 @@ public abstract class MapConnection {
     public abstract Set<String> getMarkerLayers();
     public abstract List<String[]> getPossibleTileMaps();
     public abstract boolean downloadTiles(String map, AreaSelection areaSelection);
+
+    protected String getCurrentDimensionEscaped() {
+        return HTTP.escapeString(currentDimension);
+    }
 }

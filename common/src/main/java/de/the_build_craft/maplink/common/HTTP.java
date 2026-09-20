@@ -50,12 +50,16 @@ import static de.the_build_craft.maplink.common.CommonModConfig.config;
  * @author Leander Knüttel
  * @author eatmyvenom
  * @author yqs112358
- * @version 08.03.2026
+ * @version 20.09.2026
  */
 public class HTTP {
     private static final int TIMEOUT_MS = 10_000;
     private static final Gson GSON = new Gson();
     private static final Pattern CHARSET_PATTERN = Pattern.compile("(?i)charset\\s*=\\s*\"?([^\";]+)\"?");
+
+    public static String escapeString(String str) {
+        return str.replace(" ", "%20");
+    }
 
     private static Charset getResponseCharset(HttpURLConnection request) {
         try {

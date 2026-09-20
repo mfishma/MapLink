@@ -44,7 +44,7 @@ import static de.the_build_craft.maplink.common.CommonModConfig.*;
 /**
  * @author Leander Knüttel
  * @author eatmyvenom
- * @version 06.08.2026
+ * @version 20.09.2026
  */
 public class SquareMapConnection extends MapConnection {
     private String markerStringTemplate = "";
@@ -114,7 +114,7 @@ public class SquareMapConnection extends MapConnection {
             SquareMapConfiguration squareMapConfiguration = HTTP.makeJSONHTTPRequest(URI.create(onlineMapConfigLink).toURL(), SquareMapConfiguration.class);
             float updateDelay = 1;
             for (SquareMapConfiguration.World world : squareMapConfiguration.worlds) {
-                SquareMapWorldSettings squareMapWorldSettings = HTTP.makeJSONHTTPRequest(URI.create(worldSettingsLinkTemplate.replace("{world}", world.name)).toURL(), SquareMapWorldSettings.class);
+                SquareMapWorldSettings squareMapWorldSettings = HTTP.makeJSONHTTPRequest(URI.create(worldSettingsLinkTemplate.replace("{world}", HTTP.escapeString(world.name))).toURL(), SquareMapWorldSettings.class);
                 updateDelay = Math.max(updateDelay, squareMapWorldSettings.player_tracker.update_interval);
             }
             UpdateTask.nextUpdateDelay = Math.max(UpdateTask.nextUpdateDelay, (int) Math.ceil(updateDelay * 1000));
@@ -150,7 +150,7 @@ public class SquareMapConnection extends MapConnection {
             HashSet<String> layers = new HashSet<>();
             SquareMapConfiguration squareMapConfiguration = HTTP.makeJSONHTTPRequest(URI.create(onlineMapConfigLink).toURL(), SquareMapConfiguration.class);
             for (SquareMapConfiguration.World world : squareMapConfiguration.worlds) {
-                SquareMapMarkerUpdate[] ml = HTTP.makeJSONHTTPRequest(URI.create(markerStringTemplate.replace("{world}", world.name)).toURL(), apiResponseType);
+                SquareMapMarkerUpdate[] ml = HTTP.makeJSONHTTPRequest(URI.create(markerStringTemplate.replace("{world}", HTTP.escapeString(world.name))).toURL(), apiResponseType);
                 for (SquareMapMarkerUpdate markerLayer : ml) {
                     layers.add(markerLayer.id);
                 }
@@ -200,14 +200,14 @@ public class SquareMapConnection extends MapConnection {
 
         Type apiResponseType = new TypeToken<SquareMapMarkerUpdate[]>() {}.getType();
 
-        URL reqUrl = URI.create(markerStringTemplate.replace("{world}", currentDimension)).toURL();
+        URL reqUrl = URI.create(markerStringTemplate.replace("{world}", getCurrentDimensionEscaped())).toURL();
         SquareMapMarkerUpdate[] markersLayers = HTTP.makeJSONHTTPRequest(reqUrl, apiResponseType);
 
         positions.clear();
         areaMarkers.clear();
 
-        for (SquareMapMarkerUpdate markerLayer : markersLayers){
-            for (SquareMapMarkerUpdate.Marker marker : markerLayer.markers){
+        for (SquareMapMarkerUpdate markerLayer : markersLayers) {
+            for (SquareMapMarkerUpdate.Marker marker : markerLayer.markers) {
                 if (Objects.equals(marker.type, "icon") && serverEntry.includeMarkerLayer(markerLayer.id) && serverEntry.includeMarker(marker.tooltip)) {
                     Position position = new Position(marker.tooltip, marker.point.x, config.general.defaultY, marker.point.z, currentDimension + markerLayer.id + marker.tooltip + marker.point.x + marker.point.z, new MarkerLayer(markerLayer.id, markerLayer.name));
                     positions.add(position);

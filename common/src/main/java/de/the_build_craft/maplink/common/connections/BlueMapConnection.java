@@ -48,7 +48,7 @@ import static de.the_build_craft.maplink.common.CommonModConfig.*;
 /**
  * @author Leander Knüttel
  * @author eatmyvenom
- * @version 06.08.2026
+ * @version 20.09.2026
  */
 public class BlueMapConnection extends MapConnection {
     List<Integer> lastWorldIndices = new ArrayList<>();
@@ -89,13 +89,12 @@ public class BlueMapConnection extends MapConnection {
 
         String baseURL = getBaseURL(serverEntry, useHttps);
         // Get config and build the urls
-        for (String w : HTTP.makeJSONHTTPRequest(
-                URI.create(baseURL + "/settings.json?").toURL(), BlueMapConfiguration.class).maps){
-            playerUrls.add(URI.create((baseURL + "/maps/" + w + "/live/players.json?").replace(" ", "%20")).toURL());
-            markerUrls.add(URI.create((baseURL + "/maps/" + w + "/live/markers.json?").replace(" ", "%20")).toURL());
+        for (String w : HTTP.makeJSONHTTPRequest(URI.create(baseURL + "/settings.json?").toURL(), BlueMapConfiguration.class).maps) {
+            playerUrls.add(URI.create(HTTP.escapeString(baseURL + "/maps/" + w + "/live/players.json?")).toURL());
+            markerUrls.add(URI.create(HTTP.escapeString(baseURL + "/maps/" + w + "/live/markers.json?")).toURL());
             worlds.add(w);
-            playerHeadIconUrlTemplates.add(baseURL + "/maps/" + w + "/assets/playerheads/{uuid}.png");
-            maps.put(w, HTTP.makeJSONHTTPRequest(URI.create(baseURL + "/maps/" + w + "/settings.json").toURL(), BlueMapMapSettings.class));
+            playerHeadIconUrlTemplates.add(HTTP.escapeString(baseURL + "/maps/" + w + "/assets/playerheads/{uuid}.png"));
+            maps.put(w, HTTP.makeJSONHTTPRequest(URI.create(HTTP.escapeString(baseURL + "/maps/" + w + "/settings.json")).toURL(), BlueMapMapSettings.class));
         }
 
         onlineMapConfigLink = baseURL + "/settings.json?";
@@ -302,7 +301,7 @@ public class BlueMapConnection extends MapConnection {
         if (settings == null) return false;
         int tileSizeX = settings.lowres.tileSize[0];
         int tileSizeZ = settings.lowres.tileSize[1];
-        String basePath = tilesUrlTemplate.replace("{world}", map);
+        String basePath = tilesUrlTemplate.replace("{world}", HTTP.escapeString(map));
 
         XaeroClientMapHandler.xaeroWorldMapSupport.init(areaSelection);
 

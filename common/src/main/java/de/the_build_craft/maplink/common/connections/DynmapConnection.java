@@ -46,7 +46,7 @@ import static de.the_build_craft.maplink.common.CommonModConfig.*;
  * @author ewpratten
  * @author Leander Knüttel
  * @author eatmyvenom
- * @version 06.08.2026
+ * @version 20.09.2026
  */
 public class DynmapConnection extends MapConnection {
     private String markerStringTemplate = "";
@@ -86,7 +86,7 @@ public class DynmapConnection extends MapConnection {
 
         try{
             // test if the link is already the correct get-request
-            queryURL = URI.create(serverEntry.link.replace(" ", "%20")).toURL();
+            queryURL = URI.create(HTTP.escapeString(serverEntry.link)).toURL();
             // Test the url
             this.getPlayerPositions();
 
@@ -158,12 +158,12 @@ public class DynmapConnection extends MapConnection {
             substring = substring.substring(0, k);
         }
         if (substring.contains("//")) {
-            onlineMapConfigLink = substring.replace(" ", "%20");
+            onlineMapConfigLink = HTTP.escapeString(substring);
         } else {
             if (!substring.startsWith("/")){
                 substring = "/" + substring;
             }
-            onlineMapConfigLink = (baseURL + substring).replace(" ", "%20");
+            onlineMapConfigLink = HTTP.escapeString(baseURL + substring);
         }
         AbstractModInitializer.LOGGER.info("configuration link: " + onlineMapConfigLink);
 
@@ -221,7 +221,7 @@ public class DynmapConnection extends MapConnection {
         worlds = dynmapConfiguration.worlds;
         worldNames = new String[worlds.length];
         for (int k = 0, worldsLength = worlds.length; k < worldsLength; k++) {
-            worldNames[k] = worlds[k].name.replace(" ", "%20");
+            worldNames[k] = HTTP.escapeString(worlds[k].name);
         }
 
         // Get the first world name. I know it seems random. Just trust me...
@@ -258,7 +258,7 @@ public class DynmapConnection extends MapConnection {
         for (String world : worldNames) {
             DynmapMarkerUpdate u;
             try {
-                u = HTTP.makeJSONHTTPRequest(URI.create(markerStringTemplate.replace("{world}", world).replace(" ", "%20")).toURL(), DynmapMarkerUpdate.class);
+                u = HTTP.makeJSONHTTPRequest(URI.create(markerStringTemplate.replace("{world}", HTTP.escapeString(world))).toURL(), DynmapMarkerUpdate.class);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -311,7 +311,7 @@ public class DynmapConnection extends MapConnection {
         lastMarkerHash = newMarkerHash;
         lastAreaMarkerHash = newAreaMarkerHash;
 
-        DynmapMarkerUpdate update = HTTP.makeJSONHTTPRequest(URI.create(markerStringTemplate.replace("{world}", dimension).replace(" ", "%20")).toURL(), DynmapMarkerUpdate.class);
+        DynmapMarkerUpdate update = HTTP.makeJSONHTTPRequest(URI.create(markerStringTemplate.replace("{world}", HTTP.escapeString(dimension))).toURL(), DynmapMarkerUpdate.class);
         positions.clear();
         areaMarkers.clear();
 

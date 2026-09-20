@@ -62,5 +62,6 @@ _...and then just wait until it's finished :)_
 - [James Seibel](https://gitlab.com/jeseibel) for making Distance Horizons: I used a lot of the multi-version build scripts from there.
 - [TheMrEngMan](https://github.com/TheMrEngMan) for letting me use the features from his own fork of the original RemotePlayers mod
 - [NotRyken](https://github.com/NotRyken) for helping with the 26.1 and 26.2 port
+- [Deltaforce8472](https://github.com/Deltaforce8472) for making the new Icon
 
 _This mod is not officially affiliated with Bluemap, Dynmap, LiveAtlas, Pl3xMap, Squaremap or Xaero in any way._
